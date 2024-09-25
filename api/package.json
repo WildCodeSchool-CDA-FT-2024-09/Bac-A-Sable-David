@@ -1,0 +1,17 @@
+{
+  "name": "bac-a-sable-david",
+  "version": "1.0.0",
+  "description": "This is a simple sandbox, aimed at learning stuff.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "fetch": "gh repo list --json id,name,url,languages,isPrivate >> list.json",
+    "create": "ts-node-dev ./data/create.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.0",
+    "ts-node-dev": "^2.0.0"
+  }
+}
