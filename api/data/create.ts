@@ -4,6 +4,7 @@ import { Repo, Lang } from "../src/types";
 (async () => {
   const repos: Repo[] = [];
   const languages: Lang[] = [];
+  const reposLanguages: { repoId: string; languageId: number }[] = [];
 
   // read the list file
   const raw = await JSON.parse(
@@ -20,17 +21,25 @@ import { Repo, Lang } from "../src/types";
       url: raw[i].url,
     });
 
-    // push languages if they haven't been pushed already
     const rawLanguages = raw[i].languages;
     for (let j: number = 0; j < rawLanguages.length; j++) {
-      if (languages.some((el: Lang) => el.name === rawLanguages[j].node.name)) {
-        //do nothing
-      } else {
+      // push languages if they haven't been pushed already
+      if (
+        !languages.some((el: Lang) => el.name === rawLanguages[j].node.name)
+      ) {
         languages.push({
-          id: languages.length + 1,
+          id: languages.length,
           name: rawLanguages[j].node.name,
         });
       }
+
+      // push join table
+      reposLanguages.push({
+        repoId: raw[i].id,
+        languageId: languages
+          .map((el: Lang) => el.name)
+          .indexOf(rawLanguages[j].node.name),
+      });
     }
   }
 
@@ -38,8 +47,7 @@ import { Repo, Lang } from "../src/types";
   await fs.writeFile("./data/repo.json", JSON.stringify(repos), (err: any) => {
     if (err) console.log(err);
     else {
-      console.log("File written successfully\n");
-      console.log("The written has the following contents:");
+      console.log("repo file written successfully\n");
     }
   });
 
@@ -51,6 +59,18 @@ import { Repo, Lang } from "../src/types";
       if (err) console.log(err);
       else {
         console.log("Language file written successfully\n");
+      }
+    }
+  );
+
+  // write join table
+  await fs.writeFile(
+    "./data/reposLanguages.json",
+    JSON.stringify(reposLanguages),
+    (err: any) => {
+      if (err) console.log(err);
+      else {
+        console.log("Join table file written successfully\n");
       }
     }
   );
