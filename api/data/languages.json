@@ -1,0 +1,17 @@
+[
+  { "id": 1, "name": "JavaScript" },
+  { "id": 2, "name": "CSS" },
+  { "id": 3, "name": "TypeScript" },
+  { "id": 4, "name": "Shell" },
+  { "id": 5, "name": "HTML" },
+  { "id": 6, "name": "Dockerfile" },
+  { "id": 7, "name": "Python" },
+  { "id": 8, "name": "C++" },
+  { "id": 9, "name": "C" },
+  { "id": 10, "name": "Makefile" },
+  { "id": 11, "name": "Objective-C" },
+  { "id": 12, "name": "CMake" },
+  { "id": 13, "name": "Batchfile" },
+  { "id": 14, "name": "OpenSCAD" },
+  { "id": 15, "name": "Arduino" }
+]
