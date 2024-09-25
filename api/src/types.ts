@@ -4,3 +4,8 @@ export type Repo = {
   url: string;
   isPrivate: number;
 };
+
+export type Lang = {
+  id: number;
+  name: string;
+};
