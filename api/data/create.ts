@@ -5,6 +5,7 @@ import { Repo, Lang } from "../src/types";
   const repos: Repo[] = [];
   const languages: Lang[] = [];
   const reposLanguages: { repoId: string; languageId: number }[] = [];
+  // const statuses: {id : number, name: string}[] = [{id: 1, name:'private'},{id: 2, name:'public'}]
 
   // read the list file
   const raw = await JSON.parse(
@@ -41,6 +42,9 @@ import { Repo, Lang } from "../src/types";
           .indexOf(rawLanguages[j].node.name),
       });
     }
+
+
+
   }
 
   // write repos in file
