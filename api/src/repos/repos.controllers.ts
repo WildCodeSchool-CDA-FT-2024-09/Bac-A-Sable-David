@@ -1,5 +1,6 @@
 import express, { NextFunction } from "express";
 import { Request, Response } from "express";
+import z from "zod";
 import repos from "../../data/repo.json";
 import { Repo } from "@/types";
 
@@ -23,13 +24,20 @@ const add = (req: Request, res: Response) => {
   res.status(201).json(req.body);
 };
 
-
 //Validate that the body actually is compatible with repos
+
+// Define Zod schema
+const RepoSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  url: z.string()
+});
+
 const validateRepo = (req: Request, res: Response, next: NextFunction) => {
-  if (true) {
-    console.log(req.body)
+  try {
+    RepoSchema.parse(req.body);
     next();
-  } else {
+  } catch (e) {
     res.status(400).json("the data isn't in the right format");
   }
 };
