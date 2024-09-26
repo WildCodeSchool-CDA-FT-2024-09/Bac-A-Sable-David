@@ -11,10 +11,15 @@ const read = (req: Request, res: Response) => {
   const result = repos.filter((repo: Repo) => repo.id == req.params.id);
 
   if (result.length === 0) {
-    res.status(404).json('No repo was found');
+    res.status(404).json("No repo was found");
   } else {
-    res.status(200).json(result[0])
+    res.status(200).json(result[0]);
   }
+};
+
+const add = (req: Request, res: Response) => {
+  repos.push(req.body);
+  res.status(201).json(req.body);
 };
 
 // HTTP verbs assciated with this controller
@@ -22,5 +27,6 @@ const repoControllers = express.Router();
 
 repoControllers.get("/", browse);
 repoControllers.get("/:id", read);
+repoControllers.post("/", add);
 
 export default repoControllers;
