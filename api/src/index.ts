@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 import express from "express";
 import router from "./router";
+import "reflect-metadata";
+import { dataSource } from './db';
 
 // initialise the .env module
 dotenv.config();
@@ -13,6 +15,8 @@ app.use(express.json());
 
 app.use("/api", router);
 
-app.listen(port, () =>
+app.listen(port, async () => {
+  await dataSource.initialize();
   console.log(`server listenning on http:/localhost/${port}`)
+}
 );
