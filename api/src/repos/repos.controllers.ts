@@ -1,61 +1,77 @@
-import express, { NextFunction } from "express";
+import express from "express";
 import { Request, Response } from "express";
-import z from "zod";
-import importRepos from "../../data/repo.json";
-import { Repo } from "@/types";
-
-// in order to modify the import, we need to re-instantiate it.
-let repos: Repo[] = importRepos;
+import { Repo } from "./repo.entity";
+import { Status } from "../status/status.entity";
+import { validate } from "class-validator";
 
 // BREAD operations
-const browse = (req: Request, res: Response) => {
-  let result = repos;
-
-  result = req.query.name
-    ? result.filter((el: Repo) =>
-        el.name.toLowerCase().includes(req.query.name as string)
-      )
-    : result;
-
-  res.status(200).json(result);
-};
-
-const read = (req: Request, res: Response) => {
-  const result = repos.filter((repo: Repo) => repo.id == req.params.id);
-
-  if (result.length === 0) {
-    res.status(404).json("No repo was found");
-  } else {
-    res.status(200).json(result[0]);
+const browse = async (req: Request, res: Response) => {
+  try {
+    const result = req.query.name
+      ? await Repo.find({
+          where: { name: req.query.name as string },
+          relations: { status: true },
+        })
+      : await Repo.find({ relations: { status: true } });
+    res.status(200).json(result);
+  } catch (error: any) {
+    res.status(500).send();
   }
 };
 
-const add = (req: Request, res: Response) => {
-  repos.push(req.body);
-  res.status(201).json(req.body);
+const read = async (req: Request, res: Response) => {
+  const result = await Repo.findOneBy({ id: req.params.id });
+
+  if (result === null) {
+    res.status(404).json("No repo was found");
+  } else {
+    res.status(200).json(result);
+  }
 };
 
-const destroy = (req: Request, res: Response) => {
-  // TODO : here i need to send out 404 if no corresponding repo was found, instead of 204 everytime.
-  repos = repos.filter((el: Repo) => el.id !== req.params.id);
-  res.status(204).json("item deleted succesfully");
-};
-
-//Validate that the body actually is compatible with repos
-
-// Define Zod schema
-const RepoSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  url: z.string(),
-});
-
-const validateRepo = (req: Request, res: Response, next: NextFunction) => {
+const add = async (req: Request, res: Response) => {
   try {
-    RepoSchema.parse(req.body);
-    next();
-  } catch (e) {
-    res.status(400).json("the data isn't in the right format");
+    const repo = new Repo();
+
+    repo.id = req.body.id;
+    repo.name = req.body.name;
+    repo.url = req.body.url;
+
+    const status = await Status.findOneOrFail({
+      where: [{ id: req.body.status }],
+    });
+
+    console.log(status);
+
+    repo.status = status;
+
+    const error = await validate(repo);
+
+    console.log(error);
+
+    if (error.length) {
+      res.status(422).send();
+    } else {
+      await repo.save();
+      res.status(201).json(req.body);
+    }
+  } catch (e: any) {
+    res.status(500).send();
+  }
+};
+
+const destroy = async (req: Request, res: Response) => {
+  try {
+    const target = await Repo.findOneBy({ id: req.params.id });
+    console.log(target);
+    if (target) {
+      target.remove();
+      res.status(204).json("item deleted succesfully");
+    } else {
+      res.status(404).send();
+    }
+  } catch (e: any) {
+    console.log(e);
   }
 };
 
@@ -64,7 +80,7 @@ const repoControllers = express.Router();
 
 repoControllers.get("/", browse);
 repoControllers.get("/:id", read);
-repoControllers.post("/", validateRepo, add);
+repoControllers.post("/", add);
 repoControllers.delete("/:id", destroy);
 
 export default repoControllers;
