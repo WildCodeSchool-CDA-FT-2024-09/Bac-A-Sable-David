@@ -1,47 +1,58 @@
 import express from "express";
 import { Request, Response } from "express";
-import { Repo } from "./repos.entity";
+import { Repo } from "./repo.entity";
+import { Status } from "../status/status.entity";
 import { validate } from "class-validator";
 
 // BREAD operations
-// const browse = (req: Request, res: Response) => {
-//   let result = repos;
+const browse = async (req: Request, res: Response) => {
+  try {
+    const result = req.query.name
+      ? await Repo.find({
+          where: { name: req.query.name as string },
+          relations: { status: true },
+        })
+      : await Repo.find({ relations: { status: true } });
+    res.status(200).json(result);
+  } catch (error: any) {
+    res.status(500).send();
+  }
+};
 
-//   result = req.query.name
-//     ? result.filter((el: Repo) =>
-//         el.name.toLowerCase().includes(req.query.name as string)
-//       )
-//     : result;
+const read = async (req: Request, res: Response) => {
+  const result = await Repo.findOneBy({ id: req.params.id });
 
-//   res.status(200).json(result);
-// };
-
-// const read = (req: Request, res: Response) => {
-//   const result = repos.filter((repo: Repo) => repo.id == req.params.id);
-
-//   if (result.length === 0) {
-//     res.status(404).json("No repo was found");
-//   } else {
-//     res.status(200).json(result[0]);
-//   }
-// };
+  if (result === null) {
+    res.status(404).json("No repo was found");
+  } else {
+    res.status(200).json(result);
+  }
+};
 
 const add = async (req: Request, res: Response) => {
   try {
-    const error = await validate(req.body);
+    const repo = new Repo();
+
+    repo.id = req.body.id;
+    repo.name = req.body.name;
+    repo.url = req.body.url;
+
+    const status = await Status.findOneOrFail({
+      where: [{ id: req.body.status }],
+    });
+
+    console.log(status);
+
+    repo.status = status;
+
+    const error = await validate(repo);
+
+    console.log(error);
 
     if (error.length) {
       res.status(422).send();
-    } else {    
-      const repo = new Repo();
-
-      repo.id = req.body.id;
-      repo.name = req.body.name;
-      repo.url = req.body.url;
-      repo.isPrivate = parseInt(req.body.isPrivate);
-    
+    } else {
       await repo.save();
-
       res.status(201).json(req.body);
     }
   } catch (e: any) {
@@ -49,19 +60,27 @@ const add = async (req: Request, res: Response) => {
   }
 };
 
-// const destroy = (req: Request, res: Response) => {
-//   // TODO : here i need to send out 404 if no corresponding repo was found, instead of 204 everytime.
-//   repos = repos.filter((el: Repo) => el.id !== req.params.id);
-//   res.status(204).json("item deleted succesfully");
-// };
-
+const destroy = async (req: Request, res: Response) => {
+  try {
+    const target = await Repo.findOneBy({ id: req.params.id });
+    console.log(target);
+    if (target) {
+      target.remove();
+      res.status(204).json("item deleted succesfully");
+    } else {
+      res.status(404).send();
+    }
+  } catch (e: any) {
+    console.log(e);
+  }
+};
 
 // HTTP verbs assciated with this controller
 const repoControllers = express.Router();
 
-// repoControllers.get("/", browse);
-// repoControllers.get("/:id", read);
+repoControllers.get("/", browse);
+repoControllers.get("/:id", read);
 repoControllers.post("/", add);
-// repoControllers.delete("/:id", destroy);
+repoControllers.delete("/:id", destroy);
 
 export default repoControllers;
