@@ -1,8 +1,7 @@
 import express from "express";
 import { Request, Response } from "express";
-// import z from "zod"; // les zod de barbarie
-// import { Repo } from "@/types";
-import { Repo } from "./repos.entity"
+import { Repo } from "./repos.entity";
+import { validate } from "class-validator";
 
 // BREAD operations
 // const browse = (req: Request, res: Response) => {
@@ -29,17 +28,24 @@ import { Repo } from "./repos.entity"
 
 const add = async (req: Request, res: Response) => {
   try {
-    const repo = new Repo();
-    repo.id = req.body.id;
-    repo.name = req.body.name;
-    repo.url = req.body.url;
-    repo.isPrivate = parseInt(req.body.isPrivate);
-  
-    await repo.save()
-  
-    res.status(201).json(req.body);
-  } catch (e:any){
-    res.status(400).send()
+    const error = await validate(req.body);
+
+    if (error.length) {
+      res.status(422).send();
+    } else {    
+      const repo = new Repo();
+
+      repo.id = req.body.id;
+      repo.name = req.body.name;
+      repo.url = req.body.url;
+      repo.isPrivate = parseInt(req.body.isPrivate);
+    
+      await repo.save();
+
+      res.status(201).json(req.body);
+    }
+  } catch (e: any) {
+    res.status(500).send();
   }
 };
 
@@ -49,23 +55,6 @@ const add = async (req: Request, res: Response) => {
 //   res.status(204).json("item deleted succesfully");
 // };
 
-//Validate that the body actually is compatible with repos
-
-// Define Zod schema
-// const RepoSchema = z.object({
-//   id: z.string(),
-//   name: z.string(),
-//   url: z.string(),
-// });
-
-// const validateRepo = (req: Request, res: Response, next: NextFunction) => {
-//   try {
-//     RepoSchema.parse(req.body);
-//     next();
-//   } catch (e) {
-//     res.status(400).json("the data isn't in the right format");
-//   }
-// };
 
 // HTTP verbs assciated with this controller
 const repoControllers = express.Router();
