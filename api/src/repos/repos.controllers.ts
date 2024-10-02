@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import { Repo } from "./repo.entity";
 import { Status } from "../status/status.entity";
 import { validate } from "class-validator";
+import { Lang } from "../languages/language.entity";
+import { In } from "typeorm";
 
 // BREAD operations
 const browse = async (req: Request, res: Response) => {
@@ -40,10 +42,10 @@ const add = async (req: Request, res: Response) => {
     const status = await Status.findOneOrFail({
       where: [{ id: req.body.status }],
     });
-
-    console.log(status);
-
     repo.status = status;
+
+    const langs = await Lang.find({where:{id: In ( req.body.langs.map((el:number)=>el)) }})
+    repo.langs = langs
 
     const error = await validate(repo);
 

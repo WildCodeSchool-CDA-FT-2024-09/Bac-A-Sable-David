@@ -5,7 +5,17 @@ meta {
 }
 
 post {
-  url: http://
-  body: none
+  url: http://localhost:3000/api/repos
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "id":"sfsdfdsf",
+    "name":"sdfsdf",
+    "url":"http://test.pascal.org",
+    "status":2,
+    "langs":[1]
+  }
 }
