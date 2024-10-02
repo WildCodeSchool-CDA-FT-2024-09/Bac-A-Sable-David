@@ -8,7 +8,7 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "repo",
+        path: "/",
         element: <Repos />,
         loader: () => fetch('http://localhost:3000/api/repos')
       },
