@@ -1,6 +1,7 @@
-import { Entity, PrimaryColumn, Column, BaseEntity, ManyToOne } from "typeorm";
+import { Entity, PrimaryColumn, Column, BaseEntity, ManyToOne, ManyToMany } from "typeorm";
 import { IsString } from "class-validator";
 import { Status } from "../status/status.entity";
+import { Lang } from "../languages/language.entity";
 
 @Entity()
 export class Repo extends BaseEntity {
@@ -16,4 +17,7 @@ export class Repo extends BaseEntity {
 
   @ManyToOne(() => Status, (status) => status.id)
   status: Status;
+
+  @ManyToMany(()=>Lang, lang => lang.repos)
+  langs?:Lang[]
 }
