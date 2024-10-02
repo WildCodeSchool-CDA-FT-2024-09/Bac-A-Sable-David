@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "fetch": "gh repo list --json id,name,url,languages,isPrivate > ./data/list.json",
     "create": "ts-node-dev ./data/create.ts",
-    "dev": "ts-node-dev ./src/index.ts"
+    "dev": "ts-node-dev ./src/index.ts",
+    "seed": "ts-node-dev ./database/seed.ts",
+    "synchronise":"npm run fetch && npm run create && npm run seed"
   },
   "author": "",
   "license": "ISC",

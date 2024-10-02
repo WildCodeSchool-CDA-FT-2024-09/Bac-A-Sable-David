@@ -2,7 +2,7 @@ export type Repo = {
   id: string;
   name: string;
   url: string;
-  isPrivate: number;
+  status: number;
 };
 
 export type Lang = {
