@@ -11,7 +11,7 @@ export class Lang extends BaseEntity {
   @IsString()
   name: string;
 
-  @ManyToMany(() => Repo , repo => repo.langs)
+  @ManyToMany(() => Repo , repo => repo.languages)
   @JoinTable()
   repos?: Repo[]
 }

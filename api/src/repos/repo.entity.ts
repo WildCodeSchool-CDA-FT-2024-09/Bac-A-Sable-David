@@ -19,5 +19,5 @@ export class Repo extends BaseEntity {
   status: Status;
 
   @ManyToMany(()=>Lang, lang => lang.repos)
-  langs?:Lang[]
+  languages?:Lang[]
 }

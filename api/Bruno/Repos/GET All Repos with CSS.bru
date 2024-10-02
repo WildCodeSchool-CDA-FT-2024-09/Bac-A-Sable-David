@@ -1,0 +1,21 @@
+meta {
+  name: GET All Repos with CSS
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:3000/api/repos?name=gino&status=1&languages=[1,2,3]
+  body: none
+  auth: none
+}
+
+params:query {
+  name: gino
+  status: 1
+  languages: [1,2,3]
+}
+
+assert {
+  status: eq 200
+}
