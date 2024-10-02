@@ -4,22 +4,34 @@ import { Repo } from "./repo.entity";
 import { Status } from "../status/status.entity";
 import { validate } from "class-validator";
 import { Lang } from "../languages/language.entity";
-import { In } from "typeorm";
+import { FindOptionsWhere, In } from "typeorm";
 
 // BREAD operations
 const browse = async (req: Request, res: Response) => {
+  const { name, status ,languages} = req.query;
+
+  // TODO : this is ok but the three filers work like 'OR', when i want then to AND. 
+  const queryFilters = [];
+  if (name) queryFilters.push({ name: name as string });
+  if (status) queryFilters.push({ status: {id: parseInt(status as string)} });
+  if (languages) {
+    const languagesFilters:number[] = (languages as string).replace("[","").replace("]","").split(",").map(el=>parseInt(el))
+    queryFilters.push({ languages: {id :In (languagesFilters)}})
+  }
+
+  console.log(queryFilters)
+
   try {
-    const result = req.query.name
-      ? await Repo.find({
-          where: { name: req.query.name as string },
-          relations: { status: true },
-        })
-      : await Repo.find({ relations: { status: true } });
+    const result = await Repo.find({
+      where: queryFilters as FindOptionsWhere<Repo>,
+      relations: { status: true, languages: true },
+    });
     res.status(200).json(result);
   } catch (error: any) {
     res.status(500).send();
   }
 };
+
 
 const read = async (req: Request, res: Response) => {
   const result = await Repo.findOneBy({ id: req.params.id });
@@ -44,8 +56,10 @@ const add = async (req: Request, res: Response) => {
     });
     repo.status = status;
 
-    const langs = await Lang.find({where:{id: In ( req.body.langs.map((el:number)=>el)) }})
-    repo.langs = langs
+    const langs = await Lang.find({
+      where: { id: In(req.body.langs.map((el: number) => el)) },
+    });
+    repo.languages = langs;
 
     const error = await validate(repo);
 

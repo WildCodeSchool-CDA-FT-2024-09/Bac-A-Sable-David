@@ -8,6 +8,6 @@ export const dataSource = new DataSource({
     database: "../api/database/repomanager.db",
     entities: [Repo, Status, Lang],
     synchronize: true,
-    logging:true, // permet de voir les opérations SQL qui sont faites
+    logging:false, // permet de voir les opérations SQL qui sont faites
 });
    

@@ -1,0 +1,26 @@
+.repo-card {
+  width: 300px;
+  height: 300px;
+  padding: ;
+  display: grid;
+  grid-template: 1fr 1fr 1fr /1fr;
+  justify-items: center;
+  align-items: center;
+  background-color: black;
+  border-radius: 16px;
+
+  & .languages-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+
+    & .language-tag{
+        background-color: yellow;
+        color: black;
+        padding:4px 8px;
+        border-radius: 8px;
+    }
+
+  }
+}
