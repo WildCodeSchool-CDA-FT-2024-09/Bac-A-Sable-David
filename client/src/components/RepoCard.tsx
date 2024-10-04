@@ -3,7 +3,7 @@ import { Repo, Lang } from "../types";
 import "../styles/RepoCard.css";
 
 export default function RepoCard({ repo }: { repo: Repo }) {
-  const { name, url, languages } = repo;
+  const { id, name, url, languages } = repo;
 
   return (
     <article className="repo-card">
@@ -15,6 +15,7 @@ export default function RepoCard({ repo }: { repo: Repo }) {
           </li>
         ))}
       </ul>
+      <Link to={`/repo/${id}`}>view details</Link>
       <Link to={url}>view on Github</Link>
     </article>
   );
