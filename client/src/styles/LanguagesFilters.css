@@ -1,0 +1,16 @@
+ul.filterbar{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap:16px;
+
+    & li{list-style: none;
+
+        & button.is-active {
+            background-color: lightgray;
+            color:black;
+        }
+
+    }
+}
