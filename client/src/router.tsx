@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import Repos from "./pages/Repos";
+import RepoPage from "./pages/RepoPage";
+import api from "./services/apiConnexion";
 
 const router = createBrowserRouter([
   {
@@ -10,7 +12,18 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Repos />,
-        loader: () => fetch('http://localhost:3000/api/repos')
+        loader: async () => {
+          const response = await api.get(`/repos`);
+          return response.data;
+        },
+      },
+      {
+        path: "/repo/:id",
+        element: <RepoPage />,
+        loader: async ({ params }) => {
+          const response = await api.get(`/repos/${params.id}`);
+          return response.data;
+        },
       },
       {
         path: "languages",
