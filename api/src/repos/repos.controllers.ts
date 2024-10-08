@@ -10,7 +10,7 @@ import { FindOptionsWhere, In } from "typeorm";
 const browse = async (req: Request, res: Response) => {
   const { name, status ,languages} = req.query;
 
-  // TODO : this is ok but the three filers work like 'OR', when i want then to AND. 
+  // TODO : this is ok but the three filers work like 'OR', when i want them to work like 'AND'. 
   const queryFilters = [];
   if (name) queryFilters.push({ name: name as string });
   if (status) queryFilters.push({ status: {id: parseInt(status as string)} });
@@ -24,7 +24,7 @@ const browse = async (req: Request, res: Response) => {
   try {
     const result = await Repo.find({
       where: queryFilters as FindOptionsWhere<Repo>,
-      relations: { status: true, languages: true },
+      relations: { status: true, languages: true},
     });
     res.status(200).json(result);
   } catch (error: any) {

@@ -1,0 +1,15 @@
+meta {
+  name: repo by id
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:3000/api/repos
+  body: none
+  auth: none
+}
+
+assert {
+  status: eq 200
+}

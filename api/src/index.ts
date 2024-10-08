@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import express from "express";
+import cors from "cors";
 import router from "./router";
 import "reflect-metadata";
 import { dataSource } from '../database/db';
@@ -10,6 +11,13 @@ const port = process.env.PORT;
 
 const app = express();
 
+app.use(
+  cors({
+    origin: [
+      process.env.CLIENT_URL as string, 
+    ]
+  })
+);
 
 app.use(express.json());
 
