@@ -35,3 +35,8 @@ nyc_output/
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+
+# Ignore data .json files
+languages.json
+list.json
+# status.json
