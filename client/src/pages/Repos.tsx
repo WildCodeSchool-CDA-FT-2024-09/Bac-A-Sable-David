@@ -11,10 +11,11 @@ export default function Repos() {
   const navigate = useNavigate();
 
   console.log(queryString);
+  //${queryString.languageIds}
 
   const GET_ALL_REPOS = gql`
     query GetAllRepos {
-      allRepos {
+      allRepos({languageIds:1}) {
         id
         name
         url
@@ -57,7 +58,7 @@ export default function Repos() {
   // useEffect(() => {refetch()}, [filter]);
 
   useEffect(() => {
-    navigate(`${filter.length ? `?languages=[${filter.toString()}]` : "/"}`);
+    navigate(`${filter.length ? `?languageIds=${filter.toString()}` : "/"}`);
   }, [filter]);
 
   return (

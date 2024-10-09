@@ -1,6 +1,15 @@
-import { InputType, Mutation, Query, Resolver, Field, Arg, Int } from "type-graphql";
+import {
+  InputType,
+  Mutation,
+  Query,
+  Resolver,
+  Field,
+  Arg,
+  Int,
+} from "type-graphql";
 import { Repo } from "./repo.entity";
 import { Status } from "../status/status.entity";
+import { In } from "typeorm";
 
 @InputType()
 class RepoInput implements Partial<Repo> {
@@ -13,17 +22,28 @@ class RepoInput implements Partial<Repo> {
   @Field()
   url: string;
 
-  @Field(()=>[Int])
-  languageIds: Array<number>
+  @Field(() => [Int])
+  languageIds: Array<number>;
 
-  @Field(()=>Int)
-  statusId:number
+  @Field(() => Int)
+  statusId: number;
 }
 
 @Resolver(Repo)
 export class RepoResolver {
   @Query(() => [Repo])
-  async allRepos() {
+  async allRepos(@Arg("languageIds") languageIds: string) {
+    if (languageIds) {
+      const languagesFilters: number[] = (languageIds as string)
+        .split(",")
+        .map((el) => parseInt(el));
+
+      return await Repo.find({
+        where: { languages: { id: In(languagesFilters) } },
+        relations: ["status", "languages"],
+      });
+    }
+
     return await Repo.find({ relations: ["status", "languages"] });
   }
 
@@ -40,9 +60,8 @@ export class RepoResolver {
     repoToInsert.name = newRepo.name;
     repoToInsert.url = newRepo.url;
 
-    const status = await Status.findOneBy({id:newRepo.statusId}) as Status //Assume we'll always find the right status
+    const status = (await Status.findOneBy({ id: newRepo.statusId })) as Status; //Assume we'll always find the right status
     repoToInsert.status = status;
-
 
     const result = await repoToInsert.save();
 
@@ -52,6 +71,6 @@ export class RepoResolver {
   @Mutation(() => Repo)
   async delete(@Arg("id") id: string) {
     const repoToDelete = await Repo.findOneBy({ id: id });
-    return repoToDelete && await repoToDelete.remove();
+    return repoToDelete && (await repoToDelete.remove());
   }
 }
