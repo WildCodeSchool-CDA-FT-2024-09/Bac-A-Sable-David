@@ -8,8 +8,10 @@ import {
   Int,
 } from "type-graphql";
 import { Repo } from "./repo.entity";
+import { Lang } from "../languages/language.entity";
 import { Status } from "../status/status.entity";
-import { In } from "typeorm";
+
+// import { In } from "typeorm";
 
 @InputType()
 class RepoInput implements Partial<Repo> {
@@ -32,19 +34,24 @@ class RepoInput implements Partial<Repo> {
 @Resolver(Repo)
 export class RepoResolver {
   @Query(() => [Repo])
-  async allRepos(@Arg("languageIds") languageIds: string) {
+  async allRepos(@Arg("languageIds", { nullable: true }) languageIds: string) {
+    let languageFilters: number[] = [];
+
     if (languageIds) {
-      const languagesFilters: number[] = (languageIds as string)
+      languageFilters = (languageIds as string)
         .split(",")
         .map((el) => parseInt(el));
-
-      return await Repo.find({
-        where: { languages: { id: In(languagesFilters) } },
-        relations: ["status", "languages"],
-      });
     }
-
-    return await Repo.find({ relations: ["status", "languages"] });
+    const repos = await Repo.find({
+      relations: ["status", "languages"],
+    });
+    return languageIds
+      ? repos.filter((repo: Repo) => {
+          return repo.languages?.some(
+            (language: Lang) => languageFilters.includes(language.id)
+          );
+        })
+      : repos;
   }
 
   @Query(() => Repo)

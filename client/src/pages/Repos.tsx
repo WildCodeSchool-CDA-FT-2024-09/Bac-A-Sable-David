@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 import RepoCard from "../components/RepoCard";
@@ -6,40 +6,34 @@ import { Lang, Repo } from "../types";
 import "../styles/Repos.css";
 import { useEffect } from "react";
 
-export default function Repos() {
-  const queryString = useLocation();
-  const navigate = useNavigate();
-
-  console.log(queryString);
-  //${queryString.languageIds}
-
-  const GET_ALL_REPOS = gql`
-    query GetAllRepos {
-      allRepos({languageIds:1}) {
-        id
+const GET_ALL_REPOS = gql`
+  query GetAllRepos($languageIds: String!) {
+    allRepos(languageIds: $languageIds) {
+      id
+      name
+      url
+      languages {
         name
-        url
-        languages {
-          name
-        }
-        status {
-          name
-        }
       }
-      allLanguages {
-        id
+      status {
         name
       }
     }
-  `;
+    allLanguages {
+      id
+      name
+    }
+  }
+`;
+
+export default function Repos() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const params = new URLSearchParams(searchParams);
 
   const [filter, setFilter] = useState<number[]>([]);
-  const { loading, error, data, refetch } = useQuery(GET_ALL_REPOS);
-
-  console.log(filter);
-  if (loading) return <p>Loading...</p>;
-
-  if (error) return <p>Error :(</p>;
+  const { loading, error, data } = useQuery(GET_ALL_REPOS, {
+    variables: { languageIds: params.get("languageIds") },
+  });
 
   const handleFilter = (id: number) => {
     if (filter.includes(id)) {
@@ -54,12 +48,16 @@ export default function Repos() {
       setFilter(newFilter);
     }
   };
-
-  // useEffect(() => {refetch()}, [filter]);
-
+  
   useEffect(() => {
-    navigate(`${filter.length ? `?languageIds=${filter.toString()}` : "/"}`);
+    params.set("languageIds", filter.toString());
+    console.log(params);
+    setSearchParams(params);
   }, [filter]);
+
+  if (loading) return <p>Loading...</p>;
+
+  if (error) return <p>Error :(</p>;
 
   return (
     <main>
