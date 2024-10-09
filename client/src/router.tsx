@@ -12,10 +12,6 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Repos />,
-        loader: async () => {
-          const response = await api.get(`/repos`);
-          return response.data;
-        },
       },
       {
         path: "/repo/:id",
