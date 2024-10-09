@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 import RepoCard from "../components/RepoCard";
@@ -48,7 +48,7 @@ export default function Repos() {
       setFilter(newFilter);
     }
   };
-  
+
   useEffect(() => {
     params.set("languageIds", filter.toString());
     console.log(params);
