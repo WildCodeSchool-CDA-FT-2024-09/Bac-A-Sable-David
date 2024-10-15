@@ -82,7 +82,7 @@ export type Status = {
 };
 
 export type GetAllReposQueryVariables = Exact<{
-  languageIds: Scalars['String']['input'];
+  languageIds?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -90,7 +90,7 @@ export type GetAllReposQuery = { __typename?: 'Query', allRepos: Array<{ __typen
 
 
 export const GetAllReposDocument = gql`
-    query GetAllRepos($languageIds: String!) {
+    query GetAllRepos($languageIds: String) {
   allRepos(languageIds: $languageIds) {
     id
     name
@@ -125,7 +125,7 @@ export const GetAllReposDocument = gql`
  *   },
  * });
  */
-export function useGetAllReposQuery(baseOptions: Apollo.QueryHookOptions<GetAllReposQuery, GetAllReposQueryVariables> & ({ variables: GetAllReposQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useGetAllReposQuery(baseOptions?: Apollo.QueryHookOptions<GetAllReposQuery, GetAllReposQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetAllReposQuery, GetAllReposQueryVariables>(GetAllReposDocument, options);
       }

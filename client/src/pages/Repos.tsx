@@ -1,38 +1,16 @@
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
-import { gql, useQuery } from "@apollo/client";
 import RepoCard from "../components/RepoCard";
-import { Lang, Repo } from "../types";
+import { useGetAllReposQuery, Lang, Repo } from "../generated/graphql-types";
 import "../styles/Repos.css";
-import { useEffect } from "react";
-
-const GET_ALL_REPOS = gql`
-  query GetAllRepos($languageIds: String!) {
-    allRepos(languageIds: $languageIds) {
-      id
-      name
-      url
-      languages {
-        name
-      }
-      status {
-        name
-      }
-    }
-    allLanguages {
-      id
-      name
-    }
-  }
-`;
 
 export default function Repos() {
   const [searchParams, setSearchParams] = useSearchParams();
   const params = new URLSearchParams(searchParams);
 
   const [filter, setFilter] = useState<number[]>([]);
-  const { loading, error, data } = useQuery(GET_ALL_REPOS, {
-    variables: { languageIds: params.get("languageIds") },
+  const { loading, error, data } = useGetAllReposQuery({
+    variables: { languageIds: params.get("languageIds") as string },
   });
 
   const handleFilter = (id: number) => {
@@ -50,9 +28,13 @@ export default function Repos() {
   };
 
   useEffect(() => {
-    params.set("languageIds", filter.toString());
-    console.log(params);
-    setSearchParams(params);
+    if (filter.length) {
+      params.set("languageIds", filter.toString());
+      console.log(params);
+      setSearchParams(params);
+    } else {
+      setSearchParams();
+    }
   }, [filter]);
 
   if (loading) return <p>Loading...</p>;
