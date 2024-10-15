@@ -1,0 +1,16 @@
+{
+  "name": "bac-a-sable-david",
+  "version": "1.0.0",
+  "description": "This is a simple sandbox, aimed at learning stuff.",
+  "main": "index.js",
+  "workspaces": [
+    "client",
+    "api"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npm run dev --workspace=client & npm run dev --workspace=api"
+  },
+  "author": "",
+  "license": "ISC"
+}
