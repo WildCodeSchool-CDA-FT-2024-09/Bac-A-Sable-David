@@ -61,7 +61,6 @@ export default function Repos() {
 
   return (
     <main>
-      {/* {JSON.stringify(data)} */}
       <ul className="filterbar">
         {data.allLanguages.map((lang: Lang) => (
           <li key={lang.id}>
@@ -84,21 +83,3 @@ export default function Repos() {
     </main>
   );
 }
-
-//   const [languages, setLanguages] = useState<Lang[]>([]);
-
-//   // needed to have the backend respond with filtered data based on the URL
-
-//   // needed to get the availabe languages for filters
-//   useEffect(() => {
-//     const fetchLanguages = async () => {
-//       const response = await api.get(`/languages`);
-//       setLanguages(response.data);
-//     };
-//     fetchLanguages();
-//   }, []);
-
-//   return (
-
-//   );
-// }
