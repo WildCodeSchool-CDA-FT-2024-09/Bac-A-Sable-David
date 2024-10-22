@@ -5,7 +5,7 @@ import { Lang } from "../src/languages/language.entity";
 
 export const dataSource = new DataSource({
     type: "sqlite",
-    database: "../api/database/repomanager.db",
+    database: "./database/repomanager.db",
     entities: [Repo, Status, Lang],
     synchronize: true,
     logging:false, // permet de voir les opérations SQL qui sont faites

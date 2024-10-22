@@ -1,0 +1,28 @@
+# Ignore node modules
+node_modules/
+
+# Ignore build output
+dist/
+build/
+
+# Ignore TypeScript cache
+*.tsbuildinfo
+
+# Ignore IDE/editor specific files
+.vscode/
+.idea/
+
+# Ignore coverage reports
+coverage/
+nyc_output/
+
+# Ignore lock files (optional, depending on your preference)
+# You can keep only one, depending on whether you use npm or yarn
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore data .json files
+languages.json
+list.json
+# status.json
