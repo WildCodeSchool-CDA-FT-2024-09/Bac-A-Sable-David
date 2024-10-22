@@ -56,7 +56,7 @@ const seed = async () => {
           where: { id: el.isPrivate ? 2 : 1 },
         });
 
-        repo.langs = await Lang.find({
+        repo.languages = await Lang.find({
           where: {
             name: In(el.languages.map((language) => language.node.name)),
           },
