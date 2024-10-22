@@ -56,7 +56,7 @@ export default function Repos() {
         ))}
       </ul>
       <ul className="repos-container">
-        {data.allRepos.map((repo: Repo) => (
+        {data && data.allRepos.map((repo: Repo) => (
           <li key={repo.id}>
             <RepoCard repo={repo} />
           </li>

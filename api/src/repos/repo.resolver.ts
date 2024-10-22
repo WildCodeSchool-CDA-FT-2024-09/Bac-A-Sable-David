@@ -47,8 +47,8 @@ export class RepoResolver {
     });
     return languageIds
       ? repos.filter((repo: Repo) => {
-          return repo.languages?.some(
-            (language: Lang) => languageFilters.includes(language.id)
+          return repo.languages?.some((language: Lang) =>
+            languageFilters.includes(language.id)
           );
         })
       : repos;
