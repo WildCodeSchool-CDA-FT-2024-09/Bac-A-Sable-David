@@ -1,0 +1,28 @@
+services: 
+  database:
+    image: postgres
+    env_file: .env
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -d ${DB_NAME} -U ${DB_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./api
+    env_file: ./api/.env
+    ports:
+      - 4000:4000
+    volumes:
+      - ./api:/app/
+    depends_on:
+      database:
+        condition: service_healthy
+
+  client:
+    build: ./client
+    command: npm run dev
+    ports:
+      - 5173:5173
+
