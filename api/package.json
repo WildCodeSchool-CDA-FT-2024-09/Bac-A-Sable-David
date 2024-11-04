@@ -9,7 +9,8 @@
     "create": "ts-node-dev ./data/create.ts",
     "dev": "ts-node-dev ./src/index.ts",
     "seed": "ts-node-dev ./database/seed.ts",
-    "synchronise": "npm run fetch && npm run create && npm run seed"
+    "synchronise": "npm run fetch && npm run create && npm run seed",
+    "start": "npm run seed && npm run dev"
   },
   "author": "",
   "license": "ISC",

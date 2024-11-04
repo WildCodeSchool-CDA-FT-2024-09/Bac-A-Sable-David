@@ -19,7 +19,7 @@ dotenv.config();
 
 export const dataSource = new DataSource({
     type: "postgres",
-    host: "localhost",//process.env.DB_NAME, // Nom de l'image associé à Postgres --name dans la commande
+    host: process.env.DB_HOST, // Nom de l'image associé à Postgres --name dans la commande
     port: 5432,
     username: "postgres",
     password: process.env.POSTGRES_PASSWORD, // -e POSTGRES_PASSWORD=

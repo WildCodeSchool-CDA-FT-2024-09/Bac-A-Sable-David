@@ -7,9 +7,6 @@ import { Status } from "../src/status/status.entity";
 import { Repo } from "../src/repos/repo.entity";
 import { In } from "typeorm";
 
-import dotenv from "dotenv";
-dotenv.config();
-
 const seed = async () => {
   console.log("Seeding starting ..");
   await dataSource.initialize();
