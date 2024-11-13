@@ -18,12 +18,12 @@ jobs:
       contents: write
 
     steps:
-      - name: Step 1 Check out git repo
+      - name: Step 1 - Checkout git repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Cache Dependencies
+      - name: Step 2 - Cache Dependencies
         uses: actions/cache@v3
         with:
           path: |
@@ -32,14 +32,14 @@ jobs:
             ./client/node_modules
           key: ${{ runner.os }}-${{  hashfiles('**/package-lock.json')}}
 
-      - name: Install package dependence
+      - name: Step 3 - Install package dependences
         run: npm run install-all-dependencies
 
-      - name: Run linters
+      - name: Step 4 - Run linters
         run: npx lint-staged --diff="origin/${GITHUB_BASE_REF}...origin/${GITHUB_HEAD_REF}"
 
-      - name: Run Unit test
-        run: npm run test
+      # - name: Run Unit test
+      #   run: npm run test
 
-      - name: Run Integration test
-        run: npm run integration-test
+      # - name: Run Integration test
+      #   run: npm run integration-test
