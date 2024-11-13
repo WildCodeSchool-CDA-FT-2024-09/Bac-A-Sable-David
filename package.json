@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npm run dev --workspace=client & npm run dev --workspace=api"
+    "dev": "npm run dev --workspace=client & npm run dev --workspace=api",
+    "install-all-dependencies": "cd ./api && npm i && cd ../client && npm i"
   },
   "author": "",
   "license": "ISC"
