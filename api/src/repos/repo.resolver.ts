@@ -6,6 +6,7 @@ import {
   Field,
   Arg,
   Int,
+  Authorized,
 } from "type-graphql";
 import { Repo } from "./repo.entity";
 import { Lang } from "../languages/language.entity";
@@ -33,6 +34,8 @@ class RepoInput implements Partial<Repo> {
 
 @Resolver(Repo)
 export class RepoResolver {
+
+  @Authorized("admin")
   @Query(() => [Repo])
   async allRepos(@Arg("languageIds", { nullable: true }) languageIds: string) {
     let languageFilters: number[] = [];
