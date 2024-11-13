@@ -1,5 +1,5 @@
 import express from "express";
-import repoControllers from "./repos/repos.controllers"
+import repoControllers from "./repos/repo.resolver"
 import statusControllers from "./status/status.controllers";
 import languageControllers from "./languages/languages.controllers";
 

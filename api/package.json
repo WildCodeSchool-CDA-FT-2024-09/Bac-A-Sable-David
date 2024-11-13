@@ -2,31 +2,40 @@
   "name": "bac-a-sable-david",
   "version": "1.0.0",
   "description": "This is a simple sandbox, aimed at learning stuff.",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "fetch": "gh repo list --json id,name,url,languages,isPrivate > ./data/list.json",
     "create": "ts-node-dev ./data/create.ts",
     "dev": "ts-node-dev ./src/index.ts",
     "seed": "ts-node-dev ./database/seed.ts",
-    "synchronise": "npm run fetch && npm run create && npm run seed"
+    "synchronise": "npm run fetch && npm run create && npm run seed",
+    "start": "npm run seed && npm run dev"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@apollo/server": "^4.11.0",
     "class-validator": "^0.14.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
+    "graphql-scalars": "^1.23.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
+    "set-cookie-parser": "^2.7.1",
     "sqlite3": "^5.1.7",
     "ts-node-dev": "^2.0.0",
+    "type-graphql": "^2.0.0-rc.2",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^4.17.21",
-    "@types/node": "^22.7.0"
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.7.0",
+    "@types/set-cookie-parser": "^2.4.10"
   }
 }

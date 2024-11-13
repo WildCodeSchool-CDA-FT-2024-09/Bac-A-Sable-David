@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "CommonJS",
+    "target": "es2022",
+    "module": "commonjs",
     "lib": ["dom", "es6", "es2017", "esnext.asynciterable"],
     "skipLibCheck": true,
     "sourceMap": true,
@@ -27,5 +27,5 @@
     }
   },
   "exclude": ["node_modules"],
-  "include": ["./src/**/*.ts", "database/db.ts", "../client/src/types.ts"]
+  "include": ["./src/**/*.ts"]
 }

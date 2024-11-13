@@ -14,63 +14,60 @@ const seed = async () => {
   try {
     // Delete everything and also the auto-generated indexes
     await queryRunner.startTransaction();
-    await queryRunner.query("DELETE FROM lang_repos_repo");
-    await queryRunner.query("DELETE FROM lang");
-    await queryRunner.query("DELETE FROM repo");
-    await queryRunner.query("DELETE FROM status");
-    await queryRunner.query(
-      'DELETE FROM sqlite_sequence WHERE name="status" OR name = "lang"'
-    );
+    await queryRunner.query("TRUNCATE lang_repos_repo CASCADE");
+    await queryRunner.query("TRUNCATE lang CASCADE");
+    await queryRunner.query("TRUNCATE repo CASCADE");
+    await queryRunner.query("TRUNCATE status CASCADE");
+
+    await queryRunner.query(`ALTER SEQUENCE lang_id_seq RESTART WITH 1;`);
+    await queryRunner.query(`ALTER SEQUENCE status_id_seq RESTART WITH 1;`);
+    await queryRunner.commitTransaction();
 
     // insert all languages
-    await Promise.all(
-      languages.map(async (el) => {
-        const lang = new Lang();
+    await queryRunner.startTransaction();
+    for (let language of languages) {
+      const lang = new Lang();
 
-        lang.name = el.name;
+      lang.name = language.name;
 
-        return lang.save();
-      })
-    );
+      await lang.save();
+    }
 
     // insert all statuses
-    await Promise.all(
-      statuses.map(async (el) => {
-        const status = new Status();
-
-        status.name = el.name;
-
-        return status.save();
-      })
-    );
+    for (let el of statuses) {
+      const status = new Status();
+      status.name = el.name;
+      await status.save();
+    }
 
     // insert all repos
-    await Promise.all(
-      repos.map(async (el) => {
-        const repo = new Repo();
-        repo.id = el.id;
-        repo.name = el.name;
-        repo.url = el.url;
+    for (let el of repos) {
+      const repo = new Repo();
+      repo.id = el.id;
+      repo.name = el.name;
+      repo.url = el.url;
 
-        repo.status = await Status.findOneOrFail({
-          where: { id: el.isPrivate ? 2 : 1 },
-        });
+      repo.status = await Status.findOneOrFail({
+        where: { id: el.isPrivate ? 2 : 1 },
+      });
 
-        repo.langs = await Lang.find({
-          where: {
-            name: In(el.languages.map((language) => language.node.name)),
-          },
-        });
+      repo.languages = await Lang.find({
+        where: {
+          name: In(el.languages.map((language) => language.node.name)),
+        },
+      });
 
-        return repo.save();
-      })
-    );
-
+      await repo.save();
+    }
     await queryRunner.commitTransaction();
+    console.info("Seeding successfull");
+
   } catch (e: any) {
     await queryRunner.rollbackTransaction();
     console.log(e);
   }
+
+  await dataSource.destroy();
 };
 
 seed();
