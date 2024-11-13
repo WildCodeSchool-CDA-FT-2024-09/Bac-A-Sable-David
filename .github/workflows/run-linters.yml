@@ -10,7 +10,7 @@ on:
 
 jobs:
   lint:
-    name: Run linters + unit
+    name: Run linters
     runs-on: ubuntu-latest
 
     permissions:

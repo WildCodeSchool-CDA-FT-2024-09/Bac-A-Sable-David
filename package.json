@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "This is a simple sandbox, aimed at learning stuff.",
   "main": "index.js",
+  "lint-staged": {
+    "*.js": "eslint --fix",
+    "*.ts": "eslint --fix"
+  },
   "workspaces": [
     "client",
     "api"
@@ -10,7 +14,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npm run dev --workspace=client & npm run dev --workspace=api",
-    "install-all-dependencies": "cd ./api && npm i && cd ../client && npm i"
+    "install-all-dependencies": "npm i --workspace=client && npm i --workspace=api"
   },
   "author": "",
   "license": "ISC"
