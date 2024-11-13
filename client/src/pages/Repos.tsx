@@ -14,6 +14,7 @@ export default function Repos() {
   });
 
   console.log('ugly console log')
+  console.log('REALLY TRYING MY BEST HERE')
 
   const handleFilter = (id: number) => {
     if (filter.includes(id)) {
