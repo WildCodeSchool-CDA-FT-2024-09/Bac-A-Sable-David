@@ -17,12 +17,10 @@ export default function Repos() {
     if (filter.includes(id)) {
       const newFilter = [...filter];
       newFilter.pop(id);
-      console.log(newFilter);
       setFilter(newFilter);
     } else {
       const newFilter = [...filter];
       newFilter.push(id);
-      console.log(newFilter);
       setFilter(newFilter);
     }
   };
@@ -30,7 +28,6 @@ export default function Repos() {
   useEffect(() => {
     if (filter.length) {
       params.set("languageIds", filter.toString());
-      console.log(params);
       setSearchParams(params);
     } else {
       setSearchParams();
