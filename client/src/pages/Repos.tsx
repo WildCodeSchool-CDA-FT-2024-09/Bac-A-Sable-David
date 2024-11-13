@@ -13,6 +13,8 @@ export default function Repos() {
     variables: { languageIds: params.get("languageIds") as string },
   });
 
+  console.log('ugly console log')
+
   const handleFilter = (id: number) => {
     if (filter.includes(id)) {
       const newFilter = [...filter];
