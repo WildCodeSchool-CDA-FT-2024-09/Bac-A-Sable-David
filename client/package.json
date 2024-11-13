@@ -8,6 +8,7 @@
     "codegen": "graphql-codegen",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "format":"echo 'please install prettier'",
     "preview": "vite preview"
   },
   "dependencies": {
