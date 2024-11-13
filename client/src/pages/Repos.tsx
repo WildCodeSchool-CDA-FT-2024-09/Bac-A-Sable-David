@@ -13,19 +13,14 @@ export default function Repos() {
     variables: { languageIds: params.get("languageIds") as string },
   });
 
-  console.log('ugly console log')
-  console.log('REALLY TRYING MY BEST HERE')
-
   const handleFilter = (id: number) => {
     if (filter.includes(id)) {
       const newFilter = [...filter];
       newFilter.pop(id);
-      console.log(newFilter);
       setFilter(newFilter);
     } else {
       const newFilter = [...filter];
       newFilter.push(id);
-      console.log(newFilter);
       setFilter(newFilter);
     }
   };
@@ -33,7 +28,6 @@ export default function Repos() {
   useEffect(() => {
     if (filter.length) {
       params.set("languageIds", filter.toString());
-      console.log(params);
       setSearchParams(params);
     } else {
       setSearchParams();
